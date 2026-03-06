@@ -1,20 +1,36 @@
-from random import *
+import random
 
-r=float(input("Введите значение для R: "))
-flag=False
-print("I   X   I   Y   I Попадание I")
-for n in range (10):
-    x= uniform(-r,r)
-    y= uniform(-r,r)
-    if x <-r or x > r or y < -r or y > r:
-        flag = False
-    elif (-r<=x<=0 and 0<=y<=r) or (0<=x<=r/2 and -2*x+r<=y<=0) or (r/2<=x<=    r and 2*x-2*r<=y<=0):
-        flag = True
+# 1. Вывести шапку
+print("Результаты десяти выстрелов по мишени:")
+print("+----------+----------+-----------+")
+print("|    X     |    Y     | Попадание |")
+print("+----------+----------+-----------+")
+
+r = float(input("Введите R: "))
+
+# 2. В цикле от 1 до 10
+for i in range(0, 10):
+    # 3. Сформировать координаты точки X, Y
+    x = random.uniform(-r, 2 * r)
+    y = random.uniform(-r, r)
+
+    # 4. Определить попадание точки в заданную область
+    in_circle = (x + r) ** 2 + (y - r) ** 2 <= r ** 2
+    in_rectangle = (0 <= x <= 2 * r) and (-r <= y <= 0)
+
+    if in_circle or in_rectangle:
+        flag = 1
     else:
-        flag = False
-    print("{0: 7.2f} {1: 7.2f}".format(x, y), end="      ")
-    if flag:
-        print("Да")
+        flag = 0
+
+    # 5. Вывести координаты точки
+    print("| {0:8.2f} | {1:8.2f} |".format(x, y), end=" ")
+
+    # 6. Вывести результат Yes или No в соответствии с флагом
+    if flag == 1:
+        print("   Yes     |")
     else:
-        print("Нет")
-    print("I-------I-------I-----------I")
+        print("   No      |")
+
+# Завершение таблицы
+print("+----------+----------+-----------+")

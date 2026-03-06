@@ -1,19 +1,56 @@
-from math import (sin,cos,sqrt,pi)
+from math import sqrt, pi, sin, cos
 
-def z1(alpha):
-    return cos(alpha) + sin(alpha) + cos(3 * alpha) + sin(3 * alpha)
-def z2(alpha):
-    return 2 * sqrt(2) * cos(alpha) * sin((pi / 4) + 2 * alpha)
 
-num = [0,30,45,60,90,180]
-with open(('input.txt'), 'wt') as inp:
-    for i in num:
-        print(i, file=inp)
+def main():
+    try:
+        # --- 1. ЧТЕНИЕ ДАННЫХ ИЗ ФАЙЛА ---
+        with open("input1.txt", "r") as f_in:
+            data = f_in.read().split()
+            if len(data) < 3:
+                print("Ошибка: в файле должно быть 3 числа (начало, конец, шаг).")
+                return
 
-with open(('input.txt')) as inp:
-    with open(('output.txt'), 'wt') as out:
-        for line in inp:
-            alpha = float(line.strip())
-            res1 = z1(alpha)
-            res2 = z2(alpha)
-            print("{0:3.0f}: z1 = {1: 1.2f}, z2 = {2: 1.2f}".format(alpha,res1,res2), file=out)
+            ab = float(data[0])  # Alpha начальное
+            ae = float(data[1])  # Alpha конечное
+            da = float(data[2])  # Шаг dAlpha
+
+        # --- 2. ПОДГОТОВКА И ВЫВОД В ФАЙЛ ---
+        with open("output1.txt", "w", encoding="utf-8") as f_out:
+            header = "+---------+----------+----------+----------+\n"
+            title = "|  Alpha  |    Z1    |    Z2    | Разность |\n"
+
+            f_out.write("Результаты сравнения выражений Z1 и Z2:\n")
+            f_out.write(header + title + header)
+
+            at = ab
+            # Цикл вычислений (с поправкой на точность float)
+            while at <= ae + da / 1000:
+                # Вычисление z1
+                term1 = cos(3 * pi / 8 - at / 4) ** 2
+                term2 = cos(11 * pi / 8 + at / 4) ** 2
+                z1 = term1 - term2
+
+                # Вычисление z2
+                z2 = (sqrt(2) / 2) * sin(at / 2)
+
+                # Дополнительно считаем разность для проверки точности
+                diff = abs(z1 - z2)
+
+                # Формирование строки таблицы
+                row = "| {0:7.2f} | {1:8.4f} | {2:8.4f} | {3:8.1e} |\n".format(at, z1, z2, diff)
+                f_out.write(row)
+
+                at += da
+
+            f_out.write(header)
+
+        print("Расчет окончен. Результаты сохранены в файл 'output1.txt'.")
+
+    except FileNotFoundError:
+        print("Ошибка: Файл 'input1.txt' не найден!")
+    except ValueError:
+        print("Ошибка: В файле 'input1.txt' должны быть только числа!")
+
+
+if __name__ == "__main__":
+    main()
