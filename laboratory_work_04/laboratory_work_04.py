@@ -1,10 +1,23 @@
+import random
+
 # 1. Ввод массива
 try:
     n = int(input("Введите количество элементов n: "))
     arr = []
-    print(f"Введите {n} вещественных чисел:")
-    for i in range(n):
-        arr.append(float(input(f"Элемент {i + 1}: ")))
+
+    choice = input("Заполнить массив случайными числами? (y/n): ").lower()
+
+    if choice == 'y':
+        # Генерируем случайные числа от -10 до 10 (можно изменить диапазон)
+        # Округляем до 1 знака для удобства проверки нулей
+        arr = [round(random.uniform(-5, 5), 1) for _ in range(n)]
+        # Чтобы в массиве гарантированно могли появиться нули для задачи 2:
+        arr = [random.choice([0.0, round(random.uniform(-5, 5), 1)]) for _ in range(n)]
+    else:
+        print(f"Введите {n} вещественных чисел:")
+        for i in range(n):
+            arr.append(float(input(f"Элемент {i + 1}: ")))
+
 except ValueError:
     print("Ошибка! Нужно вводить вещественные числа.")
     exit()
