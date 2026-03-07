@@ -16,35 +16,35 @@ def draw_grid(r, scale):
     limit_y_min = int(1.5 * r)
 
     # Ось X
-    t.penup();
-    t.goto(-limit_x * scale, 0);
-    t.pendown();
+    t.penup()
+    t.goto(-limit_x * scale, 0)
+    t.pendown()
     t.goto(limit_x * scale, 0)
     t.write(" X", font=("Arial", 12, "bold"))
     for x in range(-limit_x, limit_x + 1):
         if x == 0: continue
-        t.penup();
-        t.goto(x * scale, -5);
-        t.pendown();
+        t.penup()
+        t.goto(x * scale, -5)
+        t.pendown()
         t.goto(x * scale, 5)
-        t.penup();
-        t.goto(x * scale, -20);
+        t.penup()
+        t.goto(x * scale, -20)
         t.write(str(x), align="center")
 
     # Ось Y
-    t.penup();
-    t.goto(0, -limit_y_min * scale);
-    t.pendown();
+    t.penup()
+    t.goto(0, -limit_y_min * scale)
+    t.pendown()
     t.goto(0, limit_y_max * scale)
     t.write(" Y", font=("Arial", 12, "bold"))
     for y in range(-limit_y_min, limit_y_max + 1):
         if y == 0: continue
-        t.penup();
-        t.goto(-5, y * scale);
-        t.pendown();
+        t.penup()
+        t.goto(-5, y * scale)
+        t.pendown()
         t.goto(5, y * scale)
-        t.penup();
-        t.goto(-25, y * scale - 7);
+        t.penup()
+        t.goto(-25, y * scale - 7)
         t.write(str(y), align="right")
 
 
