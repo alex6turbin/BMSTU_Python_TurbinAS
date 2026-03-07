@@ -1,62 +1,51 @@
+import sys
 import os
 
+# 1. Настройка путей для импорта
+current_dir = os.path.dirname(os.path.abspath(__file__)) # папка lab_06
+project_root = os.path.dirname(current_dir)              # корень проекта
+lab04_path = os.path.join(project_root, "laboratory_work_04")
+
+if lab04_path not in sys.path:
+    sys.path.insert(0, lab04_path)
+
+# 2. Импорт функций
+try:
+    from laboratory_work_04 import get_max_element_info, get_product_between_zeros, transform_array
+except ImportError:
+    print("Ошибка: Не удалось найти файл laboratory_work_04.py")
+    sys.exit()
 
 def main():
     try:
-        # --- 1. ЧТЕНИЕ ДАННЫХ ИЗ ФАЙЛА ---
-        if not os.path.exists("input4.txt"):
-            print("Ошибка: Файл 'input4.txt' не найден!")
+        # Чтение данных из файла (как в вашей первой программе)
+        input_file = "input4.txt" # Убедитесь, что файл лежит в папке lab_06
+        if not os.path.exists(input_file):
+            print(f"Файл {input_file} не найден!")
             return
 
-        with open("input4.txt", "r") as f_in:
-            # Считываем все данные и преобразуем в список вещественных чисел
+        with open(input_file, "r") as f_in:
             data = f_in.read().split()
-            if not data:
-                print("Ошибка: Файл пуст!")
-                return
+            if not data: return
+            n = int(data[0])
+            arr = [int(x) for x in data[1:n+1]]
 
-            n = int(data[0])  # Первое число — количество элементов
-            arr = [float(x) for x in data[1:n + 1]]  # Остальные — элементы массива
+        # ИСПОЛЬЗОВАНИЕ ИМПОРТИРОВАННЫХ ФУНКЦИЙ
+        max_val, max_idx = get_max_element_info(arr)
+        product = get_product_between_zeros(arr)
+        new_arr = transform_array(arr)
 
-        # --- 2. ВЫПОЛНЕНИЕ ЗАДАЧ ---
-        results = []  # Список для хранения строк вывода
-        results.append(f"Исходный массив: {arr}")
-
-        # Задача 1: Номер максимального элемента
-        max_val = max(arr)
-        max_index = arr.index(max_val) + 1
-        results.append(f"1. Порядковый номер максимального элемента ({max_val}): {max_index}")
-
-        # Задача 2: Произведение между первым и вторым нулями
-        zero_indices = [i for i, val in enumerate(arr) if val == 0]
-        if len(zero_indices) >= 2:
-            start, end = zero_indices[0] + 1, zero_indices[1]
-            if start < end:
-                product = 1.0
-                for i in range(start, end):
-                    product *= arr[i]
-                results.append(f"2. Произведение элементов между первым и вторым нулями: {product}")
-            else:
-                results.append("2. Между первым и вторым нулями нет элементов.")
-        else:
-            results.append("2. В массиве меньше двух нулей, произведение вычислить нельзя.")
-
-        # Задача 3: Преобразование массива
-        transformed_arr = arr[0::2] + arr[1::2]
-        results.append(f"3. Преобразованный массив: {transformed_arr}")
-
-        # --- 3. ЗАПИСЬ РЕЗУЛЬТАТОВ В ФАЙЛ ---
+        # Запись результатов
         with open("output4.txt", "w", encoding="utf-8") as f_out:
-            for line in results:
-                f_out.write(line + "\n")
+            f_out.write(f"Исходный массив: {arr}\n")
+            f_out.write(f"1. Макс: {max_val} (№ {max_idx})\n")
+            f_out.write(f"2. Произведение между нулями: {product}\n")
+            f_out.write(f"3. Трансформированный массив: {new_arr}\n")
 
-        print("Обработка завершена. Результаты сохранены в 'output4.txt'.")
+        print("Расчет завершен. Результаты в output4.txt")
 
-    except ValueError:
-        print("Ошибка: Некорректные данные в файле (ожидались числа)!")
     except Exception as e:
-        print(f"Произошла ошибка: {e}")
-
+        print(f"Ошибка: {e}")
 
 if __name__ == "__main__":
     main()

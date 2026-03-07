@@ -1,56 +1,61 @@
-from math import sqrt, pi, sin, cos
+import sys
+import os
+
+# 1. Получаем путь к папке laboratory_work_06 (где лежит этот файл)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 2. Поднимаемся на уровень выше в главную папку BMSTU_Python_TurbinAS
+project_root = os.path.dirname(current_dir)
+
+# 3. Формируем путь к папке с первой лабораторной
+lab01_path = os.path.join(project_root, "laboratory_work_01")
+
+# 4. Добавляем этот путь в систему поиска модулей Python
+if lab01_path not in sys.path:
+    sys.path.insert(0, lab01_path)
+
+# 5. Импортируем функции (название файла указываем без .py)
+try:
+    from laboratory_work_01_02 import function_1, function_2
+    print("Функции успешно импортированы!")
+except ImportError as e:
+    print(f"Ошибка импорта: {e}")
+    sys.exit(1)
 
 
 def main():
     try:
-        # --- 1. ЧТЕНИЕ ДАННЫХ ИЗ ФАЙЛА ---
         with open("input1.txt", "r") as f_in:
             data = f_in.read().split()
             if len(data) < 3:
-                print("Ошибка: в файле должно быть 3 числа (начало, конец, шаг).")
+                print("Ошибка: нужно 3 числа.")
                 return
+            ab, ae, da = map(float, data)
 
-            ab = float(data[0])  # Alpha начальное
-            ae = float(data[1])  # Alpha конечное
-            da = float(data[2])  # Шаг dAlpha
-
-        # --- 2. ПОДГОТОВКА И ВЫВОД В ФАЙЛ ---
         with open("output1.txt", "w", encoding="utf-8") as f_out:
             header = "+---------+----------+----------+----------+\n"
-            title = "|  Alpha  |    Z1    |    Z2    | Разность |\n"
-
-            f_out.write("Результаты сравнения выражений Z1 и Z2:\n")
+            title  = "|  Alpha  |    Z1    |    Z2    | Разность |\n"
+            f_out.write("Результаты импортированных функций:\n")
             f_out.write(header + title + header)
 
             at = ab
-            # Цикл вычислений (с поправкой на точность float)
             while at <= ae + da / 1000:
-                # Вычисление z1
-                term1 = cos(3 * pi / 8 - at / 4) ** 2
-                term2 = cos(11 * pi / 8 + at / 4) ** 2
-                z1 = term1 - term2
-
-                # Вычисление z2
-                z2 = (sqrt(2) / 2) * sin(at / 2)
-
-                # Дополнительно считаем разность для проверки точности
+                # Используем импортированные функции
+                z1 = function_1(at)
+                z2 = function_2(at)
                 diff = abs(z1 - z2)
 
-                # Формирование строки таблицы
                 row = "| {0:7.2f} | {1:8.4f} | {2:8.4f} | {3:8.1e} |\n".format(at, z1, z2, diff)
                 f_out.write(row)
-
                 at += da
 
             f_out.write(header)
-
-        print("Расчет окончен. Результаты сохранены в файл 'output1.txt'.")
+        print("Расчет окончен. Использованы функции из calculations.py")
 
     except FileNotFoundError:
-        print("Ошибка: Файл 'input1.txt' не найден!")
-    except ValueError:
-        print("Ошибка: В файле 'input1.txt' должны быть только числа!")
-
+        print("Ошибка: Файл 'input1.txt' или 'calculations.py' не найден!")
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
 
 if __name__ == "__main__":
     main()

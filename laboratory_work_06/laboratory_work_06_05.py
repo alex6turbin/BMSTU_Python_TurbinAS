@@ -1,28 +1,30 @@
 import random
 import os
+import sys
+
+# --- Настройка путей для импорта из соседней папки ---
+current_dir = os.path.dirname(os.path.abspath(__file__))  # папка lab_06
+project_root = os.path.dirname(current_dir)  # корень BMSTU_Python...
+lab05_path = os.path.join(project_root, "laboratory_work_05")
+
+if lab05_path not in sys.path:
+    sys.path.insert(0, lab05_path)
+
+# --- Импорт функций из ПЕРВОЙ программы ---
+try:
+    from laboratory_work_05 import find_matching_elements_k, sum_rows_with_negatives
+except ImportError:
+    print("Ошибка: Не удалось найти файл laboratory_work_05.py")
+    sys.exit()
+
 
 def create_matrix(rows, cols):
     """Генерация матрицы случайными числами"""
     return [[random.randint(-10, 10) for _ in range(cols)] for _ in range(rows)]
 
-def find_symmetric_k(matrix):
-    """Задача 1: Поиск k, где k-я строка совпадает с k-м столбцом"""
-    matches = []
-    size = min(len(matrix), len(matrix[0]))
-    for k in range(size):
-        row_k = matrix[k]
-        col_k = [matrix[i][k] for i in range(len(matrix))]
-        if row_k == col_k:
-            matches.append(k + 1)
-    return matches
 
-def process_negative_rows(matrix):
-    """Задача 2: Суммы для каждой строки с отрицательным элементом"""
-    results = []
-    for i, row in enumerate(matrix):
-        if any(x < 0 for x in row):
-            results.append((i + 1, sum(row)))
-    return results
+# Функции find_symmetric_k и process_negative_rows удалены,
+# так как теперь используются импортированные аналоги.
 
 def main():
     if not os.path.exists("input5.txt"):
@@ -43,21 +45,22 @@ def main():
 
         # --- ЗАПИСЬ В ФАЙЛ ---
         with open("output5.txt", "w", encoding="utf-8") as f_out:
-            # 1. Записываем исходную матрицу
             f_out.write("Исходная матрица:\n")
             for row in matrix:
                 f_out.write(" ".join(f"{elem:4}" for elem in row) + "\n")
 
-            # 2. Результаты задачи №1
-            k_indices = find_symmetric_k(matrix)
+            # --- Использование импортированных функций ---
+
+            # Задача №1 (вызываем импортированную find_matching_elements_k)
+            k_indices = find_matching_elements_k(matrix)
             f_out.write("\n--- Результаты задачи №1 ---\n")
             if k_indices:
                 f_out.write(f"Строки, совпадающие со столбцами (k): {k_indices}\n")
             else:
                 f_out.write("Совпадений строк и столбцов не обнаружено.\n")
 
-            # 3. Результаты задачи №2
-            neg_results = process_negative_rows(matrix)
+            # Задача №2 (вызываем импортированную sum_rows_with_negatives)
+            neg_results = sum_rows_with_negatives(matrix)
             f_out.write("\n--- Результаты задачи №2 ---\n")
             if neg_results:
                 f_out.write("Суммы в строках с отрицательными числами:\n")
@@ -66,10 +69,13 @@ def main():
             else:
                 f_out.write("Строк с отрицательными элементами не найдено.\n")
 
-        print("Готово! Матрица обработана, результаты в файле 'output5.txt'.")
+        print("Готово! Использованы функции из laboratory_work_05. Результаты в 'output5.txt'.")
 
     except ValueError:
         print("Ошибка: В файле input5.txt должны быть только целые числа!")
+    except Exception as e:
+        print(f"Непредвиденная ошибка: {e}")
+
 
 if __name__ == "__main__":
     main()

@@ -1,55 +1,45 @@
 import random
 
-# 1. Ввод массива
-try:
-    n = int(input("Введите количество элементов n: "))
-    arr = []
+# --- Функции для импорта ---
 
-    choice = input("Заполнить массив случайными числами? (y/n): ").lower()
+def get_max_element_info(array):
+    """Задача 1: Максимальный элемент и его номер (индекс + 1)."""
+    if not array: return None, None
+    max_val = max(array)
+    return max_val, array.index(max_val) + 1
 
-    if choice == 'y':
-        # Генерируем случайные числа от -10 до 10 (можно изменить диапазон)
-        # Округляем до 1 знака для удобства проверки нулей
-        arr = [round(random.uniform(-5, 5), 1) for _ in range(n)]
-        # Чтобы в массиве гарантированно могли появиться нули для задачи 2:
-        arr = [random.choice([0.0, round(random.uniform(-5, 5), 1)]) for _ in range(n)]
-    else:
-        print(f"Введите {n} вещественных чисел:")
-        for i in range(n):
-            arr.append(float(input(f"Элемент {i + 1}: ")))
 
-except ValueError:
-    print("Ошибка! Нужно вводить вещественные числа.")
-    exit()
+def get_product_between_zeros(array):
+    """Задача 2: Произведение между первой парой нулей, имеющей элементы между собой."""
+    zero_indices = [i for i, val in enumerate(array) if val == 0]
 
-print("\nИсходный массив:", arr)
+    if not zero_indices:
+        return "В массиве нет нулей"
+    if len(zero_indices) < 2:
+        return "В массиве только один ноль"
 
-# --- Задача 1: Номер максимального элемента ---
-max_val = max(arr)
-max_index = arr.index(max_val) + 1  # +1 для порядкового номера (не индекса)
-print(f"1. Порядковый номер максимального элемента ({max_val}): {max_index}")
+    # Ищем первый подходящий интервал
+    for k in range(len(zero_indices) - 1):
+        start = zero_indices[k] + 1
+        end = zero_indices[k + 1]
 
-# --- Задача 2: Произведение между первым и вторым нулями ---
-zero_indices = [i for i, val in enumerate(arr) if val == 0]
+        if start < end:  # Если между индексами есть элементы
+            product = 1
+            for i in range(start, end):
+                product *= array[i]
+            return product
 
-if len(zero_indices) >= 2:
-    start = zero_indices[0] + 1
-    end = zero_indices[1]
+    return "Нет элементов между нулями (все нули стоят рядом)"
 
-    # Если между нулями есть элементы
-    if start < end:
-        product = 1
-        for i in range(start, end):
-            product *= arr[i]
-        print(f"2. Произведение элементов между 0 и 0: {product}")
-    else:
-        print("2. Между первым и вторым нулями нет элементов.")
-else:
-    print("2. В массиве меньше двух нулей, произведение вычислить нельзя.")
 
-# --- Задача 3: Преобразование массива (нечетные/четные позиции) ---
-odd_positions = arr[0::2]  # С первого элемента через один (1-я, 3-я...)
-even_positions = arr[1::2]  # Со второго элемента через один (2-я, 4-я...)
+def transform_array(array):
+    """Задача 3: Сначала нечетные позиции, потом четные."""
+    return array[0::2] + array[1::2]
 
-transformed_arr = odd_positions + even_positions
-print("3. Преобразованный массив:", transformed_arr)
+
+# --- Исполняемый код (не сработает при импорте) ---
+if __name__ == "__main__":
+    n = int(input("Введите n: "))
+    arr = [random.randint(-5, 5) for _ in range(n)]
+    print(f"Массив: {arr}")
+    print(f"Макс: {get_max_element_info(arr)}")

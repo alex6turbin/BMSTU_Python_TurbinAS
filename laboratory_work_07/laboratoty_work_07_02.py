@@ -77,7 +77,7 @@ def monte_carlo_adaptive():
     y_min, y_max = -r_val, 2 * r_val
 
     s_box = (x_max - x_min) * (y_max - y_min)
-    s_real = (1 / 4) * math.pi * r_val ** 2 + 2 * r_val ** 2
+    s_real = math.pi * r_val ** 2 + 2 * r_val ** 2
 
     # 3. Цикл испытаний
     for _ in range(n_points):
