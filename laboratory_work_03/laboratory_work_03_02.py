@@ -4,9 +4,9 @@ import random
 while True:
     try:
         r = float(input("Введите положительный параметр R: "))
-        if r >= 0:
+        if r > 0:
             break
-        print("Ошибка: R не может быть отрицательным.")
+        print("Ошибка: R не может быть отрицательным или равным нулю.")
     except ValueError:
         print("Ошибка: введите числовое значение.")
 
