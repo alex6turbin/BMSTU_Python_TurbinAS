@@ -42,4 +42,5 @@ if __name__ == "__main__":
     n = int(input("Введите n: "))
     arr = [random.randint(-5, 5) for _ in range(n)]
     print(f"Массив: {arr}")
+    print(f"Произведение между нулями: {get_product_between_zeros(arr)}")
     print(f"Макс: {get_max_element_info(arr)}")
